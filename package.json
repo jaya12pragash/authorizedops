@@ -1,0 +1,32 @@
+{
+  "name": "authorizedops",
+  "version": "1.0.0",
+  "description": "```markdown\r ## 🔗 Quick Links\r - 🎥 Demo: https://youtube.com/your-video\r - 💻 Repo: https://github.com/jaya12pragash/authorizedops\r - 🌐 Live: (if deployed)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=backend\"",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "start": "npm start --workspace=backend",
+    "frontend": "npm run dev --workspace=frontend",
+    "backend": "npm run dev --workspace=backend",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaya12pragash/authorizedops.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaya12pragash/authorizedops/issues"
+  },
+  "homepage": "https://github.com/jaya12pragash/authorizedops#readme"
+}

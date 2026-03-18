@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Initialize Project",
+			"type": "shell",
+			"command": "npm init -y && mkdir -p frontend backend && cd frontend && npx create-next-app@latest . --typescript --eslint --tailwind --app && cd ../backend && npm init -y",
+			"group": "build"
+		}
+	]
+}
