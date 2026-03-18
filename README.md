@@ -1,3 +1,11 @@
+
+
+```markdown
+## 🔗 Quick Links
+- 🎥 Demo: https://youtube.com/your-video
+- 💻 Repo: https://github.com/jaya12pragash/authorizedops
+- 🌐 Live: (if deployed)
+
 # AuthorizedOps: Secure AI Agent with Token Vault
 
 AuthorizedOps is an agentic AI application that can securely perform actions across user-connected apps like Google Calendar, GitHub, and Slack using **Auth0 for AI Agents and Token Vault**.
