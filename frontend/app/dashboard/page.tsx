@@ -1,4 +1,47 @@
-import { getSession } from "@auth0/nextjs-auth0";
+﻿import { getSession } from "@auth0/nextjs-auth0";
+import AgentSection from "@/components/AgentSection";
+import { fetchPullRequestsSafe, getTopPriority } from "@/lib/github";
+
+async function ConnectedAppsSection() {
+  const { pulls, unavailable } = await fetchPullRequestsSafe(
+    process.env.GITHUB_TOKEN,
+  );
+  const topPR = getTopPriority(pulls);
+
+  return (
+    <section className="mb-6 rounded-lg border p-5">
+      <h2 className="mb-4 text-xl font-semibold">Connected Apps</h2>
+      <ul className="space-y-2">
+        <li className="flex items-start gap-3 text-sm">
+          <span className="mt-0.5 font-medium text-gray-700 w-36">Google Calendar</span>
+          <span className="text-gray-400">Not connected yet</span>
+        </li>
+        <li className="flex items-start gap-3 text-sm">
+          <span className="mt-0.5 font-medium text-gray-700 w-36">GitHub</span>
+          {unavailable ? (
+            <span className="text-amber-600">Unavailable — check token</span>
+          ) : (
+            <span className="space-y-0.5">
+              <span className="block text-green-700 font-medium">Connected ✓</span>
+              <span className="block text-gray-500">
+                PRs fetched: {pulls.length}
+              </span>
+              {topPR && (
+                <span className="block text-gray-500">
+                  Top priority: #{topPR.number} — {topPR.title}
+                </span>
+              )}
+            </span>
+          )}
+        </li>
+        <li className="flex items-start gap-3 text-sm">
+          <span className="mt-0.5 font-medium text-gray-700 w-36">Slack</span>
+          <span className="text-gray-400">Not connected yet</span>
+        </li>
+      </ul>
+    </section>
+  );
+}
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -41,51 +84,9 @@ export default async function DashboardPage() {
           </a>
         </div>
 
-        <section className="mb-6 rounded-lg border p-5">
-          <h2 className="mb-3 text-xl font-semibold">Connected Apps</h2>
-          <p className="text-sm text-gray-600">
-            Google Calendar: Not connected yet
-          </p>
-          <p className="text-sm text-gray-600">GitHub: Not connected yet</p>
-          <p className="text-sm text-gray-600">Slack: Not connected yet</p>
-        </section>
+        <ConnectedAppsSection />
 
-        <section className="mb-6 rounded-lg border p-5">
-          <h2 className="mb-3 text-xl font-semibold">Ask AuthorizedOps</h2>
-          <textarea
-            className="w-full rounded-lg border p-3"
-            rows={5}
-            placeholder="Example: Prepare my daily engineering update"
-          />
-          <button className="mt-4 rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
-            Run Agent
-          </button>
-        </section>
-
-        <section className="rounded-lg border p-5">
-          <h2 className="mb-3 text-xl font-semibold">Approval Preview</h2>
-          <p className="mb-2">
-            <strong>Planned action:</strong> Draft a Slack update
-          </p>
-          <p className="mb-2">
-            <strong>Data sources:</strong> Google Calendar, GitHub
-          </p>
-          <div className="rounded-lg bg-gray-100 p-4 text-sm">
-            Today’s update:
-            <br />- 2 meetings on the calendar
-            <br />- 1 PR awaiting review
-            <br />- Focus: complete Auth0 Token Vault integration
-          </div>
-
-          <div className="mt-4 flex gap-3">
-            <button className="rounded-lg bg-green-600 px-5 py-2 text-white">
-              Approve
-            </button>
-            <button className="rounded-lg border px-5 py-2">
-              Reject
-            </button>
-          </div>
-        </section>
+        <AgentSection />
       </div>
     </main>
   );
