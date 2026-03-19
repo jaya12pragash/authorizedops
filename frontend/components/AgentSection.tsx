@@ -88,7 +88,7 @@ export default function AgentSection() {
 
   return (
     <>
-      <section className="mb-6 rounded-lg border p-5">
+      <section className="mb-6 rounded-lg border p-5 shadow-sm">
         <h2 className="mb-3 text-xl font-semibold">Ask AuthorizedOps</h2>
 
         {showPromptForm ? (
@@ -128,7 +128,7 @@ export default function AgentSection() {
       </section>
 
       {(status === 'review' || status === 'executing') && plan && (
-        <section className="mb-6 rounded-lg border p-5">
+        <section className="mb-6 rounded-lg border p-5 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">Review Agent Plan</h2>
           <ApprovalCard
             plan={plan}
@@ -140,7 +140,7 @@ export default function AgentSection() {
       )}
 
       {status === 'executed' && plan && executionResult && (
-        <section className="mb-6 rounded-lg border border-green-200 bg-green-50 p-5">
+        <section className="mb-6 rounded-lg border border-green-200 bg-green-50 p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
             <h2 className="text-xl font-semibold">Execution Result</h2>
             <span className="rounded-full bg-green-100 px-3 py-0.5 text-xs font-medium text-green-700">

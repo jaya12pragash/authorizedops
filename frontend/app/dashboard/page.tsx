@@ -9,12 +9,12 @@ async function ConnectedAppsSection() {
   const topPR = getTopPriority(pulls);
 
   return (
-    <section className="mb-6 rounded-lg border p-5">
+    <section className="mb-6 rounded-lg border p-5 shadow-sm">
       <h2 className="mb-4 text-xl font-semibold">Connected Apps</h2>
       <ul className="space-y-2">
         <li className="flex items-start gap-3 text-sm">
           <span className="mt-0.5 font-medium text-gray-700 w-36">Google Calendar</span>
-          <span className="text-gray-400">Not connected yet</span>
+          <span className="text-gray-500">Not connected</span>
         </li>
         <li className="flex items-start gap-3 text-sm">
           <span className="mt-0.5 font-medium text-gray-700 w-36">GitHub</span>
@@ -22,13 +22,13 @@ async function ConnectedAppsSection() {
             <span className="text-amber-600">Unavailable — check token</span>
           ) : (
             <span className="space-y-0.5">
-              <span className="block text-green-700 font-medium">Connected ✓</span>
+              <span className="font-medium text-green-600">Connected ✓</span>
               <span className="block text-gray-500">
-                PRs fetched: {pulls.length}
+                PRs: {pulls.length}
               </span>
               {topPR && (
                 <span className="block text-gray-500">
-                  Top priority: #{topPR.number} — {topPR.title}
+                  Top PR: #{topPR.number} — {topPR.title}
                 </span>
               )}
             </span>
@@ -36,7 +36,7 @@ async function ConnectedAppsSection() {
         </li>
         <li className="flex items-start gap-3 text-sm">
           <span className="mt-0.5 font-medium text-gray-700 w-36">Slack</span>
-          <span className="text-gray-400">Not connected yet</span>
+          <span className="text-gray-500">Not connected</span>
         </li>
       </ul>
     </section>
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
 
           <a
             href="/api/auth/logout?returnTo=/"
-            className="rounded-lg border border-red-300 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            className="rounded-lg border border-red-300 px-4 py-2 text-xs text-red-600 hover:bg-red-50"
           >
             Logout
           </a>

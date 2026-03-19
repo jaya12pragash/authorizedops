@@ -25,7 +25,7 @@ export default function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
         onChange={(e) => setPrompt(e.target.value)}
         className="w-full rounded-lg border p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
         rows={4}
-        placeholder="Example: Prepare my daily engineering update"
+        placeholder='Try: "Summarise open pull requests" or "Prepare my daily update"'
         disabled={isLoading}
         maxLength={1000}
         aria-label="Agent prompt"
@@ -34,12 +34,18 @@ export default function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
         <button
           type="submit"
           disabled={isLoading || !prompt.trim()}
-          className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-4 rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
         >
           {isLoading ? 'Planning…' : 'Run Agent'}
         </button>
         <span className="text-xs text-gray-400">{prompt.length} / 1000</span>
       </div>
+      <p className="mt-2 text-xs text-gray-500">
+        The agent will generate a plan before taking any action.
+      </p>
+      {isLoading && (
+        <p className="mt-2 text-sm text-gray-500">Generating plan...</p>
+      )}
     </form>
   );
 }
