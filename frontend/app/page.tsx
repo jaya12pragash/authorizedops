@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
@@ -7,19 +9,27 @@ export default function Home() {
           Secure AI Agent with Token Vault
         </h2>
         <p className="mb-8 text-lg text-gray-600">
-          Welcome to AuthorizedOps — your secure agentic AI application for performing real tasks across integrated apps.
+          Welcome to AuthorizedOps — your secure agentic AI application for
+          performing real tasks across integrated apps.
         </p>
 
         <div className="mb-10 flex gap-4">
-          <button className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
-            Login
-          </button>
-          <button className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-50">
+         <a
+  href="/api/auth/login?returnTo=/dashboard"
+  className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+>
+  Login
+</a>
+
+          <Link
+            href="#features"
+            className="rounded-lg border border-gray-300 px-6 py-2 hover:bg-gray-50"
+          >
             Learn More
-          </button>
+          </Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div id="features" className="grid gap-4 md:grid-cols-3">
           <div className="rounded-lg border p-5">
             <h3 className="mb-2 text-xl font-semibold">AI Agent</h3>
             <p className="text-sm text-gray-600">
