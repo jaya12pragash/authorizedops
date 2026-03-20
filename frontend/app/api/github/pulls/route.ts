@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { auth0 } from '@/lib/auth0';
+import { getGitHubToken } from '@/lib/auth0';
 import { fetchPullRequestsSafe } from '@/lib/github';
 import type { GitHubPullRequest } from '@/lib/github';
 
@@ -18,15 +18,7 @@ export async function GET() {
   }
 
   // Retrieve the user's GitHub access token from Auth0 Token Vault.
-  // Degrades gracefully — returns undefined when GitHub is not yet connected.
-  let githubToken: string | undefined;
-  try {
-    const { token } = await auth0.getAccessTokenForConnection({ connection: 'github' });
-    githubToken = token;
-  } catch (err) {
-    console.warn('[pulls] Token Vault: GitHub token unavailable:', (err as Error).message);
-  }
-
+  const githubToken = await getGitHubToken();
   const { pulls, unavailable } = await fetchPullRequestsSafe(githubToken);
 
   return NextResponse.json({
