@@ -1,4 +1,4 @@
-﻿import { auth0, getGitHubToken } from "@/lib/auth0";
+﻿import { requireSession, getGitHubToken } from "@/lib/auth0";
 import AgentSection from "@/components/AgentSection";
 import { fetchPullRequestsSafe, getTopPriority } from "@/lib/github";
 
@@ -46,7 +46,10 @@ async function ConnectedAppsSection() {
 }
 
 export default async function DashboardPage() {
-  const session = await auth0.getSession();
+  const session = await requireSession();
+
+  console.log("session user keys:", Object.keys(session?.user || {}));
+  console.log("session top-level keys:", Object.keys(session || {}));
 
   if (!session) {
     return (

@@ -1,22 +1,12 @@
-import { Auth0Client } from '@auth0/nextjs-auth0/server';
-import type { Session } from '@auth0/nextjs-auth0/server';
-
-// Shared Auth0 client instance used across all server-side routes.
-// Reads credentials from environment variables at startup.
-export const auth0 = new Auth0Client({
-  domain: process.env.AUTH0_DOMAIN!,
-  clientId: process.env.AUTH0_CLIENT_ID!,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET!,
-  secret: process.env.AUTH0_SECRET!,
-  appBaseUrl: process.env.APP_BASE_URL!,
-});
+import { getSession } from '@auth0/nextjs-auth0';
+import type { Session } from '@auth0/nextjs-auth0';
 
 /**
  * Returns the current session or throws an error with message "Unauthorized".
  * Routes catch this and return a 401 response, keeping the guard a one-liner.
  */
-export async function requireSession(): Promise<Session> {
-  const session = await auth0.getSession();
+export async function requireSession(): Promise<Session | null> {
+  const session = await getSession();
   if (!session) throw new Error('Unauthorized');
   return session;
 }
@@ -29,8 +19,12 @@ export async function requireSession(): Promise<Session> {
  */
 export async function getGitHubToken(): Promise<string | undefined> {
   try {
-    const { token } = await auth0.getAccessTokenForConnection({ connection: 'github' });
-    return token;
+    const session = await getSession();
+    if (!session) return undefined;
+    // In v3, GitHub token is accessed via session properties if Auth0 is configured
+    // to return connected account tokens. Falls back gracefully if not available.
+    const token = (session as any)?.accessToken;
+    return token || undefined;
   } catch (err) {
     console.warn(
       '[auth0] Token Vault: GitHub token unavailable:',
