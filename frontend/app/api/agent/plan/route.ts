@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
+import { getGitHubToken } from '@/lib/auth0';
 import type { AgentPlan, AgentPlanRequest } from '@/types/agent';
 import {
   fetchPullRequestsSafe,
@@ -328,9 +329,10 @@ export async function POST(request: NextRequest) {
   const trimmedPrompt = prompt.trim();
   const intent = resolveIntent(trimmedPrompt.toLowerCase());
 
-  // Fetch GitHub PR data only for intents that use it
+  // Fetch GitHub PR data only for intents that use it.
+  // Token comes from Auth0 Token Vault; undefined when not connected (degrades gracefully).
   const { pulls, unavailable: githubUnavailable } = needsGitHubData(intent)
-    ? await fetchPullRequestsSafe(process.env.GITHUB_TOKEN)
+    ? await fetchPullRequestsSafe(await getGitHubToken())
     : { pulls: [], unavailable: false };
 
   const ctx = extractContext(trimmedPrompt, pulls, githubUnavailable);

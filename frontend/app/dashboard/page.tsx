@@ -1,12 +1,15 @@
 ﻿import { getSession } from "@auth0/nextjs-auth0";
+import { getGitHubToken } from "@/lib/auth0";
 import AgentSection from "@/components/AgentSection";
 import { fetchPullRequestsSafe, getTopPriority } from "@/lib/github";
 
 async function ConnectedAppsSection() {
-  const { pulls, unavailable } = await fetchPullRequestsSafe(
-    process.env.GITHUB_TOKEN,
-  );
+  // Retrieve the GitHub token from Auth0 Token Vault for the logged-in user.
+  const token = await getGitHubToken();
+  const { pulls, unavailable } = await fetchPullRequestsSafe(token);
   const topPR = getTopPriority(pulls);
+  // `tokenConnected` is true only when Token Vault returned a real token.
+  const tokenConnected = !unavailable && token !== undefined;
 
   return (
     <section className="mb-6 rounded-lg border p-5 shadow-sm">
@@ -18,11 +21,11 @@ async function ConnectedAppsSection() {
         </li>
         <li className="flex items-start gap-3 text-sm">
           <span className="mt-0.5 font-medium text-gray-700 w-36">GitHub</span>
-          {unavailable ? (
-            <span className="text-amber-600">Unavailable — check token</span>
+          {!tokenConnected ? (
+            <span className="text-amber-600">Not connected / token unavailable</span>
           ) : (
             <span className="space-y-0.5">
-              <span className="font-medium text-green-600">Connected ✓</span>
+              <span className="font-medium text-green-600">Connected via Token Vault ✓</span>
               <span className="block text-gray-500">
                 PRs: {pulls.length}
               </span>

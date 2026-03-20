@@ -1,10 +1,12 @@
 // ---------------------------------------------------------------------------
 // GitHub service
 //
-// Currently returns mock data. To switch to the real GitHub API:
-//   1. Set GITHUB_TOKEN in .env.local
-//   2. Set GITHUB_REPO (e.g. "org/repo") in .env.local
-//   3. Uncomment the live fetch block in fetchPullRequests()
+// fetchPullRequests(token) — live GitHub API when a token is supplied.
+// fetchPullRequestsSafe(token) — safe wrapper; never throws, returns { pulls, unavailable }.
+//
+// The token is obtained at call-site via Auth0 Token Vault:
+//   auth0.getAccessTokenForConnection({ connection: 'github' })
+// Falls back to mock data when the token or GITHUB_REPO env var is absent.
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -115,26 +117,26 @@ export async function fetchPullRequests(
       return MOCK_PULLS;
     }
 
-    // Uncomment to enable live GitHub API calls:
-    // const res = await fetch(
-    //   `https://api.github.com/repos/${repo}/pulls?state=open&per_page=20`,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //       Accept: 'application/vnd.github+json',
-    //       'X-GitHub-Api-Version': '2022-11-28',
-    //     },
-    //     next: { revalidate: 60 },
-    //   },
-    // );
-    // if (!res.ok) {
-    //   console.error(`[github] API error ${res.status}`);
-    //   return MOCK_PULLS;
-    // }
-    // const json: GitHubApiPull[] = await res.json();
-    // return json.map(mapApiPull);
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/pulls?state=open&per_page=20`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        next: { revalidate: 60 },
+      },
+    );
+    if (!res.ok) {
+      console.error(`[github] API error ${res.status} for repo ${repo}`);
+      return MOCK_PULLS;
+    }
+    const json: GitHubApiPull[] = await res.json();
+    return json.map(mapApiPull);
   }
 
+  // No token — Token Vault not connected for this user; return mock data.
   return MOCK_PULLS;
 }
 
