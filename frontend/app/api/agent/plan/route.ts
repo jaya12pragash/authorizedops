@@ -1,6 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@auth0/nextjs-auth0';
-import { getGitHubToken } from '@/lib/auth0';
+import { requireSession, getGitHubToken } from '@/lib/auth0';
 import type { AgentPlan, AgentPlanRequest } from '@/types/agent';
 import {
   fetchPullRequestsSafe,
@@ -306,8 +305,9 @@ const intentBuilders: Record<Intent, (ctx: PromptContext) => IntentPlan> = {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
-  const session = await getSession();
-  if (!session) {
+  try {
+    await requireSession();
+  } catch {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

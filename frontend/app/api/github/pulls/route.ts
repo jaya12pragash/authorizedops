@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@auth0/nextjs-auth0';
-import { getGitHubToken } from '@/lib/auth0';
+import { requireSession, getGitHubToken } from '@/lib/auth0';
 import { fetchPullRequestsSafe } from '@/lib/github';
 import type { GitHubPullRequest } from '@/lib/github';
 
@@ -12,8 +11,9 @@ export interface GitHubPullsApiResponse {
 }
 
 export async function GET() {
-  const session = await getSession();
-  if (!session) {
+  try {
+    await requireSession();
+  } catch {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

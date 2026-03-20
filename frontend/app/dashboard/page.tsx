@@ -1,5 +1,4 @@
-﻿import { getSession } from "@auth0/nextjs-auth0";
-import { getGitHubToken } from "@/lib/auth0";
+﻿import { auth0, getGitHubToken } from "@/lib/auth0";
 import AgentSection from "@/components/AgentSection";
 import { fetchPullRequestsSafe, getTopPriority } from "@/lib/github";
 
@@ -47,7 +46,7 @@ async function ConnectedAppsSection() {
 }
 
 export default async function DashboardPage() {
-  const session = await getSession();
+  const session = await auth0.getSession();
 
   if (!session) {
     return (
