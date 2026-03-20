@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=backend\"",
-    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "build": "npm run build --workspace=frontend",
     "start": "npm start --workspace=backend",
     "frontend": "npm run dev --workspace=frontend",
     "backend": "npm run dev --workspace=backend",
